@@ -1,0 +1,8 @@
+h2 {
+    margin-bottom: 15px;
+}
+
+.inner-container {
+    border: 1px solid green;
+    padding: 15px;
+}

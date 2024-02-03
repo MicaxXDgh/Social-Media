@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta Tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" >
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/reg.css">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <title>Sign in to S&M</title>
+</head>
+<body>
+    <form onsubmit="return validateAndSubmit()">
+        <h2>Sign In</h2>
+        <div class="form-group">
+            <label for="userInput">User:</label>
+            <input type="text" name="" id="userleInput" class="form-control" placeholder="Your name" aria-describedby="helpId">
+            <small id="helpId" class="text-muted">Help text</small>
+        </div>
+
+        <div class="mb-3">
+            <label for="emailInput" class="form-label">Email:</label>
+            <input type="email" class="form-control" name="" id="emailInput" aria-describedby="emailHelpId" placeholder="abc@mail.com" required />
+            <small id="emailHelpId" class="form-text text-muted">Help text</small>
+        </div>
+
+        <div class="mb-3">
+            <label for="passwordInput" class="form-label">Password:</label>
+            <input type="password" class="form-control" name="" id="passwordInput" placeholder="*******" required minlength="8" maxlength="20" pattern=".{8,20}" title="8 to 20 characters" aria-invalid="false" />
+        </div>
+        <button type="submit" class="btn btn-success">Submit</button>
+    </form>
+
+    <div class="no-acc-register">
+        <p>Don't have an account? <a href="register.html">Register</a></p>
+    </div>
+
+    <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#modalId">
+        Register
+    </button>
+    <div class="modal fade" id="modalId" tabindex="-1" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitleId">
+                        Sign Up
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <form onsubmit="return validateAndSubmit()">
+                            <div class="form-group">
+                                <h2>Sign In</h2>
+                                <label for="usernameInput">Username:</label>
+                                <input type="text" name="username" id="usernameInput" class="form-control" placeholder="Your username" aria-describedby="helpId" required>
+                                <small id="helpId" class="text-muted">Enter your username</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="tagInput">Tag (4 digits):</label>
+                                <input type="text" name="tag" id="tagInput" class="form-control" placeholder="1234" pattern="\d{4}" title="Enter a 4-digit tag" required>
+                                <small id="tagHelpId" class="text-muted">Enter your 4-digit tag</small>
+                            </div>
+                    
+                            <div class="mb-3">
+                                <label for="emailInput" class="form-label">Email:</label>
+                                <input type="email" class="form-control" name="" id="emailInput" aria-describedby="emailHelpId" placeholder="abc@mail.com" required />
+                                <small id="emailHelpId" class="form-text text-muted">Help text</small>
+                            </div>
+                    
+                            <div class="mb-3">
+                                <label for="passwordInput" class="form-label">Password:</label>
+                                <input type="password" class="form-control" name="" id="passwordInput" placeholder="*******" required minlength="7" maxlength="25" pattern=".{7,25}" aria-invalid="false" required />
+                            </div>
+                            <div class="mb-3">
+                                <label for="repeatPasswordInput" class="form-label">Repeat Password:</label>
+                                <input type="password" class="form-control" name="" id="repeatPasswordInput" placeholder="*******" required minlength="7" maxlength="25" pattern=".{7,25}" aria-invalid="false" required />
+                            </div>
+                            <div class="mb-3">
+                                <label for="profilePicture" class="form-label">Profile Picture:</label>
+                                <div class="input-group">
+                                    <input type="file" class="form-control" name="profilePicture" id="profilePicture" accept="image/*"
+                                        onchange="previewImage()" />
+                                </div>
+                                <div class="d-flex justify-content-center mt-2">
+                                    <img id="preview" class="rounded-circle" style="max-width: 100px; max-height: 100px; object-fit: cover;"
+                                        alt="Profile Preview">
+                                </div>
+                            </div>
+                            <div class="form-check form-check">
+                                <input class="form-check-input" type="checkbox" id="acceptCheckbox" value="option1" required>
+                                <label class="form-check-label" for="acceptCheckbox">I accept T.</label>
+                            </div>
+                    
+                            <div class="form-check form-check">
+                                <input class="form-check-input" type="checkbox" id="secondCheckbox" value="option2" disabled checked>
+                                <label class="form-check-label" for="secondCheckbox">Second</label>
+                            </div>
+                            <div class="g-recaptcha" data-sitekey="6LfGa2UpAAAAAH63WoVa_cDnaIfvIxWnheCnpbAg"></div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="button" class="btn btn-success" onclick="validateAndSubmit()">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const myModal = new bootstrap.Modal(
+            document.getElementById("modalId"),
+            options,
+        );
+
+        function previewImage() {
+            const input = document.getElementById('profilePicture');
+            const preview = document.getElementById('preview');
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                preview.src = 'assets/nopfp.jpg';
+            }
+        }
+
+        function validateForm() {
+            const username = document.getElementById('userleInput').value;
+            const tag = document.getElementById('tagInput').value;
+            const email = document.getElementById('emailInput').value;
+            const password = document.getElementById('passwordInput').value;
+            const repeatPassword = document.getElementById('repeatPasswordInput').value;
+            const acceptCheckbox = document.getElementById('acceptCheckbox').checked;
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+            if (!emailRegex.test(email)) {
+                alert('Invalid email address.');
+                return false;
+            }
+            if (password.length < 6 || password.length > 20) {
+                alert('Password must be between 6 and 20 characters');
+                return false;
+            }
+        
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/;
+            if (!passwordRegex.test(password)) {
+                alert('Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character');
+                return false;
+            }
+
+            if (!username || !email || !password || !repeatPassword) {
+                alert('Please fill in all fields');
+                return false;
+            }
+
+            if (password !== repeatPassword) {
+                alert('Passwords do not match');
+                return false;
+            }
+
+            // Check if reCAPTCHA is solved
+            const recaptchaResponse = grecaptcha.getResponse();
+            if (!recaptchaResponse) {
+                alert('Please complete the reCAPTCHA verification');
+                return false;
+            }
+
+            return true;
+        }
+
+        function validateAndSubmit() {
+            if (validateForm()) {
+                window.location.href = 's&m.html';
+            }
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</body>
+</html>

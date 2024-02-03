@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .left-side, .right-side {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            height: 400px;
+            overflow-y: scroll;
+        }
+
+        .right-side {
+            height: 600px;
+        }
+
+        .message {
+            margin-bottom: 15px;
+        }
+
+        .message .sender {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .message .timestamp {
+            font-size: 12px;
+            color: #6c757d;
+        }
+
+        .friend-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .friend-list li {
+            cursor: pointer;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .friend-list li:hover {
+            background-color: #f0f0f0;
+        }
+
+        .input-group {
+            margin-top: 20px;
+        }
+
+        .form-control {
+            border-radius: 0;
+        }
+
+        .send-button, .add-friend-button {
+            border-radius: 0;
+        }
+    </style>
+
+    <title>S&M</title>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="inner-container left-side">
+                    <h1>Friends</h1>
+                    <button class="btn btn-success add-friend-button" data-bs-toggle="modal" data-bs-target="#addFriendModal">Add Friend</button>
+                    <ul class="friend-list" id="friendList">
+                    </ul>
+                    <p id="noFriendsMessage" style="display: none;">You have no friends :(</p>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="inner-container right-side" id="messageContainer">
+                </div>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="messageInput" placeholder="Type your message...">
+                    <button class="btn btn-primary send-button" onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="addFriendModal" tabindex="-1" aria-labelledby="addFriendModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addFriendModalLabel">Add Friend</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="friendName" class="form-label">Friend's Name:</label>
+                        <input type="text" class="form-control" id="friendName" placeholder="Enter friend's name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="friendTag" class="form-label">Friend's Tag:</label>
+                        <input type="text" class="form-control" id="friendTag" placeholder="Enter friend's tag (4 digits)" pattern="\d{4}" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" onclick="addFriend()">Add Friend</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let friends = [];
+
+        const friendList = document.getElementById('friendList');
+        const messageContainer = document.getElementById('messageContainer');
+        const noFriendsMessage = document.getElementById('noFriendsMessage');
+        let selectedFriend = null;
+
+        function updateFriendList() {
+            friendList.innerHTML = '';
+            if (friends.length === 0) {
+                noFriendsMessage.style.display = 'block';
+            } else {
+                noFriendsMessage.style.display = 'none';
+                friends.forEach(friend => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `${friend.username}#${friend.tag}`;
+                    listItem.addEventListener('click', () => selectFriend(friend));
+                    friendList.appendChild(listItem);
+                });
+            }
+        }
+
+        function selectFriend(friend) {
+            messageContainer.innerHTML = `<h3>Messages with ${friend.username}#${friend.tag}</h3>`;
+            selectedFriend = friend;
+        }
+
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+
+            if (selectedFriend) {
+                const message = messageInput.value.trim();
+
+                if (message !== '') {
+                    const newMessage = document.createElement('div');
+                    newMessage.className = 'message';
+                    newMessage.innerHTML = `
+                        <span class="sender">You:</span>
+                        <span class="timestamp">${getCurrentTimestamp()}</span>
+                        <p>${message}</p>
+                    `;
+
+                    messageContainer.appendChild(newMessage);
+                    messageInput.value = '';
+                    messageContainer.scrollTop = messageContainer.scrollHeight;
+                }
+            } else {
+                alert('Please select a friend to send a message.');
+            }
+        }
+
+        function getCurrentTimestamp() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            return `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')} ${hours}:${minutes}`;
+        }
+
+        function addFriend() {
+            const friendNameInput = document.getElementById('friendName');
+            const friendTagInput = document.getElementById('friendTag');
+
+            const friendName = friendNameInput.value.trim();
+            const friendTag = friendTagInput.value.trim();
+
+            if (friendName !== '' && friendTag !== '') {
+                const newFriend = { username: friendName, tag: friendTag };
+                friends.push(newFriend);
+
+                updateFriendList();
+
+                friendNameInput.value = '';
+                friendTagInput.value = '';
+                document.getElementById('addFriendModal').classList.remove('show');
+                document.body.classList.remove('modal-open');
+                document.body.style.paddingRight = '0px';
+                document.querySelector('.modal-backdrop').remove();
+            } else {
+                alert('Please enter both the friend\'s name and tag.');
+            }
+        }
+    </script>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>
